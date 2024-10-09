@@ -1,0 +1,20 @@
+/* src/FlowStyles.css */
+
+.react-flow__node-default {
+    background: #fefefe;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+  }
+  
+  .react-flow__node-default:hover {
+    transform: scale(1.05); /* Slightly grow the node on hover */
+  }
+  
+  .react-flow {
+    border: 2px solid #4a90e2; /* Blue border around the canvas */
+    border-radius: 8px;
+  }
+  
