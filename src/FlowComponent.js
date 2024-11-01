@@ -1,56 +1,41 @@
 // src/FlowComponent.js
-import React, { useState } from 'react';
-import ReactFlow, { MiniMap, Controls, Background, useNodesState, useEdgesState } from 'reactflow';
-import 'reactflow/dist/style.css';
-import './FlowStyles.css'; // Ensure this path is correct
+import React, { useState, useCallback } from 'react';
+import ReactFlow, { MiniMap, Controls, Background } from 'reactflow';
+import CustomEdge from './CustomEdge'; // Import CustomEdge
+import 'reactflow/dist/style.css'; // Import default styles
 
-const initialNodes = [
-  {
-    id: '1',
-    type: 'default',
-    data: { label: 'Node 1' },
-    position: { x: 250, y: 5 },
-  },
+const initialEdges = [
+  { id: 'e1-2', source: '1', target: '2' }, // Example edges
 ];
 
 const FlowComponent = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [selectedNode, setSelectedNode] = useState(null);
+  const [edges, setEdges] = useState(initialEdges);
 
-  const onNodeClick = (event, node) => {
-    setSelectedNode(node);
-  };
+  const onDeleteEdge = useCallback(
+    (edgeId) => {
+      setEdges((eds) => eds.filter((e) => e.id !== edgeId)); // Delete edge by ID
+    },
+    [setEdges]
+  );
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <div style={{ width: '70%' }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodeClick={onNodeClick}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          fitView
-          style={{ border: '1px solid #ddd', borderRadius: '8px' }} // Added border for aesthetics
-        >
-          <MiniMap />
-          <Controls />
-          <Background />
-        </ReactFlow>
-      </div>
-
-      <div style={{ width: '30%', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-        {selectedNode ? (
-          <div>
-            <h3>Selected Node</h3>
-            <p><strong>ID:</strong> {selectedNode.id}</p>
-            <p><strong>Position:</strong> x - {selectedNode.position.x}, y - {selectedNode.position.y}</p>
-          </div>
-        ) : (
-          <p>Select a node to see its details</p>
-        )}
-      </div>
+    <div style={{ height: '100vh' }}>
+      <ReactFlow
+        nodes={[]} // Add your nodes here
+        edges={edges}
+        edgeTypes={{ customEdge: CustomEdge }} // Use CustomEdge type
+        onEdgeClick={(event, edge) => {
+          // Optional: Handle edge click
+        }}
+        fitView
+      >
+        <MiniMap />
+        <Controls />
+        <Background />
+        {edges.map((edge) => (
+          <CustomEdge key={edge.id} {...edge} onDeleteEdge={onDeleteEdge} /> // Pass down onDeleteEdge
+        ))}
+      </ReactFlow>
     </div>
   );
 };

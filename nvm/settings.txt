@@ -1,0 +1,2 @@
+root: C:\Users\yashita\Desktop\react-flow-app\nvm
+path: C:\Program Files\nodejs
